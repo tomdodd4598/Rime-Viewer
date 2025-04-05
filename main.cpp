@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <iostream>
 
+// All colors
 enum class Color { WHITE, YELLOW, MAGENTA, BLUE, CYAN, GREEN };
 
 static char const* to_string(Color color) {
@@ -21,6 +22,7 @@ static char const* to_string(Color color) {
     }
 }
 
+// Colors must be in order
 #define COLOR_ORDER0(X1, X2, X3, X4) std::array<Color, 4>{ X1, X2, X3, X4 }, std::array<Color, 4>{ X4, X3, X2, X1 }
 #define COLOR_ORDER(X1, X2, X3, X4) COLOR_ORDER0(static_cast<Color>(X1), static_cast<Color>(X2), static_cast<Color>(X3), static_cast<Color>(X4))
 
@@ -42,6 +44,7 @@ constexpr std::array<std::array<Color, 4>, 30> COLOR_ORDERS = {
     COLOR_ORDER(2, 3, 4, 5),
 };
 
+// All iris sizes
 enum class Size { SMALL, MEDIUM, LARGE };
 
 static char const* to_string(Size size) {
@@ -57,6 +60,7 @@ static char const* to_string(Size size) {
 
 #define SIZE_ORDER(X1, X2, X3, X4) std::array<Size, 4>{ static_cast<Size>(X1), static_cast<Size>(X2), static_cast<Size>(X3), static_cast<Size>(X4) }
 
+// Sizes must not repeat
 constexpr std::array<std::array<Size, 4>, 8> SIZE_ORDERS = {
     SIZE_ORDER(0, 1, 0, 2),
     SIZE_ORDER(0, 2, 0, 2),
@@ -70,6 +74,7 @@ constexpr std::array<std::array<Size, 4>, 8> SIZE_ORDERS = {
 
 #define POSITION_OFFSET(X1, X2, X3, X4) std::array<int, 4>{ X1, X2, X3, X4 }
 
+// Separations at least 3, total distance at most 11
 constexpr std::array<std::array<int, 4>, 10> POSITION_OFFSETS = {
     POSITION_OFFSET(0, 3, 6, 9),
     POSITION_OFFSET(0, 3, 6, 10),
@@ -99,11 +104,13 @@ int main() {
                     bool valid = true;
 
                     for (std::size_t j = 0; j < 4; ++j) {
+                        // Green color must use small size
                         if (colors[j] == Color::GREEN && sizes[j] != Size::SMALL) {
                             valid = false;
                             break;
                         }
 
+                        // Small size must have equal separations either side
                         if ((j == 1 || j == 2) && sizes[j - 1] == Size::SMALL && sizes[j + 1] == Size::SMALL && 2 * positions[j] != positions[j - 1] + positions[j + 1]) {
                             valid = false;
                             break;
